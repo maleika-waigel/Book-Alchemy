@@ -6,7 +6,6 @@ from flask import (
     render_template,
     request
 )
-from flask_sqlalchemy import SQLAlchemy
 
 from data_models import db, Author, Book
 
@@ -59,6 +58,44 @@ def add_author():
         return render_template(
             "add_author.html",
             success_message="Autor erfolgreich hinzugefügt!"
+        )
+
+
+@app.route('/add_book', methods=['GET', 'POST'])
+def add_book():
+    """
+    Fügt ein neues Buch zur Datenbank hinzu.
+    Bei einem GET-Request wird das Formular mit den vorhandenen
+    Autoren angezeigt.
+    Bei einem POST-Request werden die Formulardaten gespeichert
+    und eine Erfolgsmeldung angezeigt.
+
+    :return: Rendert das Formular mit oder ohne Erfolgsmeldung.
+    """
+    if request.method == 'GET':
+        authors = Author.query.all()
+        return render_template('add_book.html', authors=authors)
+
+    else:
+        book = Book(
+            isbn=request.form["isbn"],
+            title=request.form["title"],
+            publication_year=(
+                int(request.form["publication_year"])
+                if request.form["publication_year"]
+                else None
+            ),
+            author_id=int(request.form["author_id"])
+        )
+        db.session.add(book)
+        db.session.commit()
+
+        authors = Author.query.all()
+
+        return render_template(
+            "add_book.html",
+            success_message="Buch erfolgreich hinzugefügt!",
+            authors=authors
         )
 
 
