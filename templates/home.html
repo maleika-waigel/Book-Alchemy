@@ -4,20 +4,24 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
   </head>
   <body>
 
+    <div class="book-list">
     {% for book in books %}
-      <div>
-        <h3>{{ book.title }}</h3>
-        <p>Author: {{ book.author.name }}</p>
+        <div class="book-card">
+            <h3>{{ book.title }}</h3>
+            <p>Autor: {{ book.author.name }}</p>
 
-        <img
-          src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
-          alt="Cover of {{ book.title }}"
-        >
-      </div>
+            <img
+                class="book-cover"
+                src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+                alt="Cover von {{ book.title }}"
+            >
+        </div>
     {% endfor %}
+    </div>
 
   </body>
 </html>
