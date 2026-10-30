@@ -21,4 +21,5 @@ def index():
     return render_template('index.html', title='Home', user='Alice')
 
 
-
+# with app.app_context():
+#     db.create_all()
