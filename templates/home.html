@@ -8,8 +8,15 @@
   <body>
 
     {% for book in books %}
-    <div> <h3>{{ book.title }}</h3>
-    </div>
+      <div>
+        <h3>{{ book.title }}</h3>
+        <p>Author: {{ book.author.name }}</p>
+
+        <img
+          src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
+          alt="Cover of {{ book.title }}"
+        >
+      </div>
     {% endfor %}
 
   </body>

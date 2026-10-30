@@ -22,7 +22,9 @@ db.init_app(app)
 
 @app.route('/')
 def index():
-    return render_template('home.html', title='Home')
+    books = Book.query.all()
+    authors = Author.query.all()
+    return render_template('home.html', books=books, authors=authors)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])
