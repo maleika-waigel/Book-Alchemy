@@ -22,9 +22,22 @@ db.init_app(app)
 
 @app.route('/')
 def index():
-    books = Book.query.all()
-    authors = Author.query.all()
-    return render_template('home.html', books=books, authors=authors)
+    """
+    Zeigt alle Bücher auf der Startseite an.
+    Die Bücher können nach Titel oder Autorname sortiert werden.
+
+    :return: Rendert die Startseite mit den sortierten Büchern.
+    """
+    sort_by = request.args.get('sort', 'title')
+
+    if sort_by == 'author':
+        books = Book.query.join(Author).order_by(Author.name).all()
+    elif sort_by == 'publication_year':
+        books = Book.query.order_by(Book.publication_year).all()
+    else:
+        books = Book.query.order_by(Book.title).all()
+
+    return render_template('home.html', books=books, sort_by=sort_by)
 
 
 @app.route('/add_author', methods=['GET', 'POST'])

@@ -1,24 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="de">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <title>Book Alchemy</title>
   </head>
   <body>
+
+    <form action="/" method="GET" class="sort-form">
+        <label for="sort">Sortieren nach:</label>
+
+        <select id="sort" name="sort" onchange="this.form.submit()">
+            <option value="title" {% if sort_by == 'title' %}selected{% endif %}>
+                Titel
+            </option>
+            <option value="author" {% if sort_by == 'author' %}selected{% endif %}>
+                Autor
+            </option>
+            <option value="publication_year" {% if sort_by == 'publication_year' %}selected{% endif %}>
+                Veröffentlichungsdatum
+            </option>
+        </select>
+    </form>
 
     <div class="book-list">
     {% for book in books %}
         <div class="book-card">
             <h3>{{ book.title }}</h3>
             <p>Autor: {{ book.author.name }}</p>
-
+            <p class="author-dates">
+                {% if book.author.date_of_death %}
+                    {{ book.author.birth_date.year }}–{{ book.author.date_of_death.year }}
+                {% elif book.author.birth_date %}
+                    geb. {{ book.author.birth_date.year }}
+                {% endif %}
+            </p>
             <img
                 class="book-cover"
                 src="https://covers.openlibrary.org/b/isbn/{{ book.isbn }}-M.jpg"
                 alt="Cover von {{ book.title }}"
             >
+            <p>Veröffentlichungsdatum: {{ book.publication_year }}</p>
         </div>
     {% endfor %}
     </div>
