@@ -4,7 +4,10 @@ from datetime import datetime
 from flask import (
     Flask,
     render_template,
-    request
+    request,
+    abort,
+    redirect,
+    url_for
 )
 
 from data_models import db, Author, Book
@@ -23,13 +26,20 @@ db.init_app(app)
 @app.route('/')
 def index():
     """
-    Zeigt alle Bücher auf der Startseite an.
-    Die Bücher können nach Titel oder Autorname sortiert werden.
+    Zeigt die Bücher auf der Startseite an.
+    Ermöglicht die Stichwortsuche und Sortierung nach Titel,
+    Autorname oder Veröffentlichungsjahr.
+    Zeigt nach dem Löschen eines Buches eine Erfolgsmeldung an.
 
-    :return: Rendert die Startseite mit den sortierten Büchern.
+    :return: Rendert die Startseite mit den gefilterten und
+             sortierten Büchern sowie einer optionalen Erfolgsmeldung.
     """
     sort_by = request.args.get('sort', 'title')
     search = request.args.get('search', '').strip()
+    success_message = None
+
+    if request.args.get('deleted') == 'true':
+        success_message = "Buch erfolgreich gelöscht!"
 
     query = Book.query
 
@@ -49,7 +59,8 @@ def index():
         'home.html',
         books=books,
         sort_by=sort_by,
-        search=search
+        search=search,
+        success_message=success_message
     )
 
 
@@ -102,7 +113,10 @@ def add_book():
     """
     if request.method == 'GET':
         authors = Author.query.all()
-        return render_template('add_book.html', authors=authors)
+        return render_template(
+            'add_book.html',
+            authors=authors
+        )
 
     else:
         book = Book(
@@ -127,9 +141,28 @@ def add_book():
         )
 
 
+@app.route('/book/<int:book_id>/delete', methods=['POST'])
+def delete_book(book_id):
+    """
+    Löscht ein Buch aus der Datenbank anhand der ID.
+
+    :param book_id: ID des zu löschenden Buches.
+    :return: Leitet zur Startseite weiter.
+    """
+    book = db.session.get(Book, book_id)
+
+    if book is None:
+        abort(404)
+
+    db.session.delete(book)
+    db.session.commit()
+
+    return redirect(url_for('index', deleted='true'))
+
+
 # with app.app_context():
 #     db.create_all()
 
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5001)

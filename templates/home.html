@@ -9,6 +9,10 @@
   </head>
   <body>
 
+    {% if success_message %}
+        <p class="success-message">{{ success_message }}</p>
+    {% endif %}
+
     <form action="/" method="GET" class="search-form">
         <label for="search">Buch suchen:</label>
 
@@ -33,11 +37,14 @@
                 Veröffentlichungsdatum
             </option>
         </select>
+
         <input type="hidden" name="search" value="{{ search }}">
+
     </form>
 
     {% if books %}
     <div class="book-list">
+
     {% for book in books %}
         <div class="book-card">
             <h3>{{ book.title }}</h3>
@@ -55,13 +62,19 @@
                 alt="Cover von {{ book.title }}"
             >
             <p>Veröffentlichungsdatum: {{ book.publication_year }}</p>
+            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="POST">
+                <button type="submit" class="delete-button">Löschen</button>
+            </form>
         </div>
     {% endfor %}
+
     </div>
+
     {% else %}
     <p class="no-results">
         Keine Bücher gefunden.
     </p>
+
     {% endif %}
 
   </body>
