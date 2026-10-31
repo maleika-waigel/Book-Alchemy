@@ -9,6 +9,16 @@
   </head>
   <body>
 
+    <form action="/" method="GET" class="search-form">
+        <label for="search">Buch suchen:</label>
+
+        <input type="search" id="search" name="search" value="{{ search }}">
+
+        <input type="hidden" name="sort" value="{{ sort_by }}">
+
+        <button type="submit">Suchen</button>
+    </form>
+
     <form action="/" method="GET" class="sort-form">
         <label for="sort">Sortieren nach:</label>
 
@@ -23,8 +33,10 @@
                 Veröffentlichungsdatum
             </option>
         </select>
+        <input type="hidden" name="search" value="{{ search }}">
     </form>
 
+    {% if books %}
     <div class="book-list">
     {% for book in books %}
         <div class="book-card">
@@ -46,6 +58,11 @@
         </div>
     {% endfor %}
     </div>
+    {% else %}
+    <p class="no-results">
+        Keine Bücher gefunden.
+    </p>
+    {% endif %}
 
   </body>
 </html>

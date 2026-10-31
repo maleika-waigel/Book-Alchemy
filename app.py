@@ -29,15 +29,28 @@ def index():
     :return: Rendert die Startseite mit den sortierten Büchern.
     """
     sort_by = request.args.get('sort', 'title')
+    search = request.args.get('search', '').strip()
+
+    query = Book.query
+
+    if search:
+        query = query.filter(Book.title.ilike(f'%{search}%'))
 
     if sort_by == 'author':
-        books = Book.query.join(Author).order_by(Author.name).all()
+        query = query.join(Author).order_by(Author.name)
     elif sort_by == 'publication_year':
-        books = Book.query.order_by(Book.publication_year).all()
+        query = query.order_by(Book.publication_year)
     else:
-        books = Book.query.order_by(Book.title).all()
+        query = query.order_by(Book.title)
 
-    return render_template('home.html', books=books, sort_by=sort_by)
+    books = query.all()
+
+    return render_template(
+        'home.html',
+        books=books,
+        sort_by=sort_by,
+        search=search
+    )
 
 
 @app.route('/add_author', methods=['GET', 'POST'])

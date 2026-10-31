@@ -190,6 +190,35 @@ textarea:focus {
 }
 
 
+/* Suchformular */
+.search-form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 500px;
+    margin: 24px auto;
+}
+
+.search-form input[type="search"] {
+    width: 100%;
+    min-height: 44px;
+    padding: 10px 12px;
+    font: inherit;
+    border: 1px solid #d9d1e7;
+    border-radius: 7px;
+}
+
+.search-form button {
+    width: 100%;
+}
+
+.no-results {
+    margin: 32px 16px;
+    text-align: center;
+    color: #6b6478;
+}
+
+
 /* ========================================
    8. Buttons
    ======================================== */
@@ -266,6 +295,7 @@ button:focus-visible {
     .book-list {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
+
     .sort-form {
         flex-direction: row;
         align-items: center;
@@ -275,6 +305,20 @@ button:focus-visible {
 
     .sort-form select {
         width: 180px;
+    }
+
+    .search-form {
+        flex-direction: row;
+        align-items: center;
+    }
+
+    .search-form input[type="search"] {
+        flex: 1;
+        min-width: 0;
+    }
+
+    .search-form button {
+        width: auto;
     }
 }
 
